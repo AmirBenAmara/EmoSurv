@@ -41,7 +41,7 @@ export class CompaniesService {
   }
   async sendEmailVerif(email, userId): Promise<any> {
     const random = Math.floor((Math.random() * 100) + 54);
-    const link = 'http://camail.fivepoints.fr/login' + random + '/' + userId;
+    const link = 'http://camail.fivepoints.fr/login/' + random + '/' + userId;
     const htmlMsg = 'Hello,<br> Please Click on the link to verify your email.<br><a href="' + link + '">Click here to verify</a>';
     const message = {
       from: 'fivepoints@mailer4.fivepoints.fr',
@@ -163,7 +163,7 @@ export class CompaniesService {
      return await this.userModel.findByIdAndRemove(idUser);
   }
   async sendEmailToNewUser(email): Promise<any> {
-    const link = 'http://camail.fivepoints.fr/login';
+    const link = 'http://camail.fivepoints.fr/login/';
     const htmlMsg = 'Hello,<br> Please Click on the link to go to the platform.<br><a href="' + link + '">Click here to go</a>';
     const message = {
       from: 'fivepoints@mailer4.fivepoints.fr',
