@@ -21,6 +21,6 @@ export class GroupsService {
     return this.groupModel.findByIdAndUpdate(idGroup, {$push: {tests: idTest}}).exec();
    }
    async createEvalInGroup(evaluation, idGroup) {
-    return this.groupModel.findByIdAndUpdate(idGroup, {$push: {tests: idTest}}).exec();
+    return this.groupModel.findByIdAndUpdate(idGroup, {$push: {tests: evaluation.test}}).exec();
    }
 }
