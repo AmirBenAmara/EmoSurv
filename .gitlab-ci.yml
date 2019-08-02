@@ -4,11 +4,10 @@ stages:
     - build-nest
     - deploy-dev
 
-before_script:
-    - npm install --silent
-
 build-nest:
     stage: build-nest
+    before_script:
+        - npm install --silent
     script:
         - npm run webpack
     artifacts:
