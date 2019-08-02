@@ -3,6 +3,7 @@ image: node:lts
 stages:
     - build-nest
     - deploy-dev
+
 before_script:
     - npm install --silent
 
@@ -16,7 +17,7 @@ build-nest:
 
 deploy-dev:
     image: ubuntu:latest
-    stage: deply-dev
+    stage: deploy-dev
     script:
         - scp -o StrictHostKeyChecking=no -r dist $dev_server_user@$dev_server_ip:/home/Camail/back
         - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip pm2 delete server
