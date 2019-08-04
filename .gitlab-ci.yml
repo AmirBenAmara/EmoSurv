@@ -1,0 +1,27 @@
+image: node:lts
+
+stages:
+    - build-nest
+    - deploy-dev
+
+build-nest:
+    stage: build-nest
+    before_script:
+        - npm install --silent
+    script:
+        - npm run webpack
+    artifacts:
+        paths:
+            - dist
+
+deploy-dev:
+    image: ubuntu:latest
+    stage: deploy-dev
+    before_script:
+        - 'which ssh-agent || ( apt-get update && apt-get install openssh-client -y )'
+        - eval $(ssh-agent -s)
+        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    script:
+        - scp -o StrictHostKeyChecking=no -r dist $dev_server_user@$dev_server_ip:/home/Camail/back
+        - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip pm2 delete server
+        - ssh -o StrictHostKeyChecking=no $dev_server_user@$dev_server_ip pm2 start /home/Camail/back/dist/server.js
