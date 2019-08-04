@@ -11,7 +11,8 @@ import * as nodemailer from 'nodemailer';
 import * as smtpPool from 'nodemailer-smtp-pool';
 import { MessageSchema } from './schemas/message.schema';
 import { Message } from './interfaces/message.interface';
-
+import {v4 as uuid} from 'uuid'
+import { from } from 'rxjs';
 @Injectable()
 export class MailingService {
     transporter;
@@ -36,9 +37,10 @@ export class MailingService {
         const messages = [];
         campaign['messages'] = [];
         await campaign.emails.forEach(async (email) => {
+
             const message = {
                 template: template['_id'], subject: campaign.subject, EmailTo: email, content: template['content'], fromEmail: campaign['fromEmail']
-                , fromName: campaign['fromName'], replyToName: campaign['replyToName'], replyToEmail: campaign['replyToEmail'], sendDate: Date.now().toString(),
+                , fromName: campaign['fromName'], replyToName: campaign['replyToName'], replyToEmail: campaign['replyToEmail'], sendDate: Date.now().toString(),uuid:uuid(),
             };
             // const messageResult = new this.messageModel(message);
             // const result = await messageResult.save();
@@ -51,6 +53,7 @@ export class MailingService {
         const createdCampaign = new this.campaignModel(campaign);
 
         const result = await createdCampaign.save();
+
         this.sendmail(messages, result['_id']);
         return result;
     }
@@ -105,7 +108,7 @@ export class MailingService {
                     replyTo: `${msg.replyToName} <${msg.replyToEmail}>`,
                     to: msg.EmailTo,
                     subject: msg.subject,
-                    html: `${msg.content}`,
+                    html: this.addTrackerToMail(msg),
                 },
             );
             const msgItem = new this.messageModel(msg);
@@ -140,5 +143,18 @@ export class MailingService {
         // });
     }
 
+    addTrackerToMail(mail){
 
+        let indexBody = mail.content.indexOf('</div>');
+        return mail.content.substr(0, indexBody) + '<img src=\"http://camail.fivepoints.fr/api/mailing/track/'+mail.uuid+'\"/>' + mail.content.substr(indexBody);
+
+
+    }
+
+    async trackEmailByUid(uuid){
+        return await this.messageModel.findOneAndUpdate({uuid},{$set : {opened : true}}).exec();
+    }
+    
+  
 }
+

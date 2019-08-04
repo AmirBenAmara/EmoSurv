@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Put, Body, UseInterceptors, UseGuards, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, UseInterceptors, UseGuards, Param, Delete, Res } from '@nestjs/common';
 import { MailingService } from './mailing.service';
 import { LoggingInterceptor } from '../common/interceptors/logging.interceptor';
 import { AuthGuard } from '../common/passport/auth.guard';
 import { TransformInterceptor } from '../common/interceptors/transform.interceptor';
 import { Campaign } from './interfaces/campaign.interface';
 import { Template } from './interfaces/template.interface';
-
+import * as fs from 'fs';
 @Controller('api/mailing')
 @UseInterceptors(LoggingInterceptor, TransformInterceptor)
 export class MailingController {
@@ -52,6 +52,15 @@ export class MailingController {
   @Delete('campaign/:id')
   async deleteCampaign(@Param('id') id) {
     return this.mailingService.deleteCampaign(id);
+  }
+
+
+  @Get('track/:uuid')
+  async trackEmailEvalByCompanyPic(@Res() res,@Param('uuid') uuid) {
+    const stream = await fs.createReadStream('/app/uploads/pixel.png');
+    // const stream = fs.createReadStream('/Users/mac/Desktop/5./eval/portal-eval-backend/uploads/' + name);
+    await this.mailingService.trackEmailByUid(uuid);
+    res.type('image/ief').send(stream);
   }
 
 }

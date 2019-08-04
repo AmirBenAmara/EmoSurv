@@ -11,10 +11,11 @@ export const messageSchema: Schema = new Schema({
   fromName: String,
   replyToName: String,
   replyToEmail: String,
-  opened: Boolean,
+  opened: { type: Boolean, default: false},
   openedTimes: [String],
   sendDate: String,
   createdDate: { type: Date, default: Date.now() },
+  uuid : String,
 
 });
 
