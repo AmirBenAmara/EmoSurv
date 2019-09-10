@@ -18,6 +18,9 @@ export const companySchema: Schema = new Schema({
     jobLocation: String, worktime: { type: String, enum: ['Full', 'Half'] },
   }],
   profiles: [{type: Schema.Types.ObjectId, ref: 'Profile' }],
+  contacts: [{type: Schema.Types.ObjectId, ref: 'Contacts' }],
+  templates: [{type: Schema.Types.ObjectId, ref: 'Template' }],
+  campaigns: [{type: Schema.Types.ObjectId, ref: 'Campaign' }],
 });
 
 export const CompanySchema = companySchema;

@@ -5,6 +5,7 @@ export const campaignSchema: Schema = new Schema({
   messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
   template: { type: Schema.Types.ObjectId, ref: 'Template' },
   owner: { type: Schema.Types.ObjectId, ref: 'Company' },
+  links: [{ type: Schema.Types.ObjectId, ref: 'Link' }],
   name: String,
   createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
   subject: String,

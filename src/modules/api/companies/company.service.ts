@@ -140,7 +140,32 @@ export class CompaniesService {
   }
 
   async findOne(id): Promise<Company> {
-    return await this.companyModel.findById({ _id: id }).populate({path: 'profiles'}).exec();
+    return await this.companyModel.findById({ _id: id }).populate(
+      [
+        {
+          path: 'contacts'
+        },
+        {
+          path : 'templates'
+        },
+        {
+          path : 'campaigns' ,
+            populate: [
+              {
+                path : 'messages' ,
+                 populate: 
+                 {
+                  path : 'template' 
+                 }
+               },
+               {
+                 path : 'links'
+               } 
+            ]
+            
+        }
+      ]
+    ).exec();
   }
   async updateOne(id, company): Promise<Company> {
     return await this.companyModel.findByIdAndUpdate({ _id: id }, {$set: company}).exec();

@@ -12,5 +12,8 @@ export interface Company extends Document {
   readonly socials: [object];
   readonly requests: [object];
   readonly profiles: [object];
+  readonly contacts: [object];
+  readonly templates: [object];
+  readonly campaigns: [object];
   newsLetter: boolean;
 }

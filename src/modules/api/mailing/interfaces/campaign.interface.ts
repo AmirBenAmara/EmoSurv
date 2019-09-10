@@ -7,6 +7,7 @@ export interface Campaign extends Document {
   readonly owner: object;
   readonly name: string;
   readonly createdBy: object;
+  readonly links: [object];
   readonly subject: string;
   readonly fromName: string;
   readonly fromEmail: string;

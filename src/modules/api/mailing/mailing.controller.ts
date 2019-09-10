@@ -6,6 +6,7 @@ import { TransformInterceptor } from '../common/interceptors/transform.intercept
 import { Campaign } from './interfaces/campaign.interface';
 import { Template } from './interfaces/template.interface';
 import * as fs from 'fs';
+import { Contact } from './interfaces/contact.interface';
 @Controller('api/mailing')
 @UseInterceptors(LoggingInterceptor, TransformInterceptor)
 export class MailingController {
@@ -23,15 +24,25 @@ export class MailingController {
     return this.mailingService.findAllTemplates();
   }
 
-  // @UseGuards(AuthGuard('jwt', 'admin'))
-  @Post('campaign')
-  async createCampaign(@Body() campaign: Campaign) {
-    return this.mailingService.createCampaign(campaign);
+  @Get('contact')
+  async findAllContacts(): Promise<Contact[]> {
+    return this.mailingService.findAllContact();
   }
 
-  @Post('template')
-  async createTemplate(@Body() template: Template) {
-    return this.mailingService.createTemplate(template);
+  // @UseGuards(AuthGuard('jwt', 'admin'))
+  @Post('campaign/:id')
+  async createCampaign(@Body() campaign: Campaign, @Param('id') idCompany) {
+    return this.mailingService.createCampaign(campaign, idCompany);
+  }
+
+  @Post('template/:id')
+  async createTemplate(@Body() template: Template, @Param('id') idCompany) {
+    return this.mailingService.createTemplate(template, idCompany);
+  }
+
+  @Post('contact/:id')
+  async createContact(@Body() contact: Contact, @Param('id') idCompany) {
+    return this.mailingService.addContact(contact, idCompany);
   }
 
   @Put('template/:id')
@@ -44,9 +55,14 @@ export class MailingController {
     return this.mailingService.updateCampaign(id, campaign);
   }
 
-  @Delete('template/:id')
-  async deleteTemplate(@Param('id') id) {
-    return this.mailingService.deleteTemplate(id);
+  @Put('contact/:id')
+  async updateContact(@Body() contact: Contact, @Param('id') id) {
+    return this.mailingService.updateContact(id, contact);
+  }
+
+  @Delete('template/:id/:idCompany')
+  async deleteTemplate(@Param('id') id, @Param('idCompany') idCompany) {
+    return this.mailingService.deleteTemplate(id, idCompany);
   }
 
   @Delete('campaign/:id')
@@ -54,13 +70,32 @@ export class MailingController {
     return this.mailingService.deleteCampaign(id);
   }
 
+  @Delete('contact/:id/:idCompany')
+  async deleteContact(@Param('id') id, @Param('idCompany') idCompany) {
+    return this.mailingService.deleteContact(id, idCompany);
+  }
+
 
   @Get('track/:uuid')
-  async trackEmailEvalByCompanyPic(@Res() res,@Param('uuid') uuid) {
-    const stream = await fs.createReadStream('../../uploads/pixel.png');
+  async trackEmailByPixel(@Res() res, @Param('uuid') uuid) {
+    const stream = await fs.createReadStream('mailingplateformebackend/uploads/pixel.png');
     // const stream = fs.createReadStream('/Users/mac/Desktop/5./eval/portal-eval-backend/uploads/' + name);
     await this.mailingService.trackEmailByUid(uuid);
     res.type('image/ief').send(stream);
+  }
+
+  @Get('trackLink/:idLink')
+  async trackEmailByLink(@Res() res, @Param('idLink') idLink) {
+    // const stream = await fs.createReadStream('mailingplateformebackend/uploads/pixel.png');
+    // const stream = fs.createReadStream('/Users/mac/Desktop/5./eval/portal-eval-backend/uploads/' + name);
+    //await this.mailingService.trackEmailByUid(uuid);
+
+    const Link = await this.mailingService.updateOpenedTimesLink(idLink);
+
+    //const redirectUrl = new URL(url);
+
+    res.redirect(Link.url.toString());
+
   }
 
 }

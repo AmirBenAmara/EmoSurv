@@ -8,12 +8,18 @@ import * as passport from 'passport';
 import { JwtStrategy } from '../common/strategy/jwt.strategy';
 import { TemplateSchema } from './schemas/template.schema';
 import { MessageSchema } from './schemas/message.schema';
+import { ContactSchema } from './schemas/contact.schema';
+import { CompanySchema } from '../companies/schemas/company.schema';
+import { LinkSchema } from './schemas/link.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Campaign', schema: CampaignSchema }]),
     MongooseModule.forFeature([{ name: 'Template', schema: TemplateSchema }]),
     MongooseModule.forFeature([{ name: 'Message', schema: MessageSchema }]),
+    MongooseModule.forFeature([{ name: 'Contacts', schema: ContactSchema }]),    
+    MongooseModule.forFeature([{ name: 'Company', schema: CompanySchema }]),
+    MongooseModule.forFeature([{ name: 'Link', schema: LinkSchema }]),
    ],
   controllers: [MailingController],
   providers: [MailingService],
