@@ -56,6 +56,8 @@ export class MailingService {
 
         campaign.links = AddTrackerResponse.links ; 
 
+        console.log(campaign);
+
         const messages = [];
         campaign['messages'] = [];
         await campaign.emails.forEach(async (email) => {
@@ -65,7 +67,7 @@ export class MailingService {
                 subject: campaign.subject,
                 EmailTo: email,
                 content: AddTrackerResponse.newHtmlContent,
-                fromEmail: campaign['fromEmail'],
+                fromEmail: 'mailer4@mailer4.fivepoints.fr',
                 fromName: campaign['fromName'],
                 replyToName: campaign['replyToName'],
                 replyToEmail: campaign['replyToEmail'],
@@ -185,7 +187,7 @@ export class MailingService {
 
     addTrackerToMail(message) {
         let indexBody = message.content.indexOf('</div>');
-        return message.content.substr(0, indexBody) + '<img src=\"http://camail.fivepoints.fr/api/mailing/track/' + message.uuid + '\"/>' + message.content.substr(indexBody);
+        return message.content.substr(0, indexBody) + '<img src=\"http://backend.camail.fivepoints.fr/api/mailing/track/' + message.uuid + '\"/>' + message.content.substr(indexBody);
     }
 
     async addTrackerLinkToEmail(htmlContent ) {
@@ -201,7 +203,7 @@ export class MailingService {
             let newLink = await createdLink.save();
 
             links.push(newLink._id);
-            newHtmlContent = newHtmlContent.replace(link[2], 'http://camail.fivepoints.fr/api/mailing/trackLink/'+ newLink._id);
+            newHtmlContent = newHtmlContent.replace(link[2], 'http://backend.camail.fivepoints.fr/api/mailing/trackLink/'+ newLink._id);
             
         }
         
@@ -273,11 +275,13 @@ export class MailingService {
     }
 
     async updateOpenedTimesLink(idLink){
+        return await this.LinkModel.findByIdAndUpdate({ _id:idLink }, { $inc: {  openedTimes : 1 } });   
+    }
 
-        return await this.LinkModel.findByIdAndUpdate({ _id:idLink }, { $inc: {  openedTimes : 1 } });
-      
+    async deleteLink(idLink, idCampaign) {
+        await this.LinkModel.remove({ _id: idLink }).exec();
+        return await this.campaignModel.findByIdAndUpdate(idCampaign, { $pull: { links: idLink } }).populate({ path: 'links' }).exec();
     }
 
 
 }
-

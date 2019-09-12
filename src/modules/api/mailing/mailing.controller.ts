@@ -75,6 +75,11 @@ export class MailingController {
     return this.mailingService.deleteContact(id, idCompany);
   }
 
+  @Delete('link/:idLink/:idCamaign')
+  async deleteLink(@Param('idLink') idLink, @Param('idCamaign') idCampaign) {
+    return this.mailingService.deleteLink(idLink, idCampaign);
+  }
+
 
   @Get('track/:uuid')
   async trackEmailByPixel(@Res() res, @Param('uuid') uuid) {
