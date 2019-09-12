@@ -83,7 +83,7 @@ export class MailingController {
 
   @Get('track/:uuid')
   async trackEmailByPixel(@Res() res, @Param('uuid') uuid) {
-    const stream = await fs.createReadStream('mailingplateformebackend/uploads/pixel.png');
+    const stream = await fs.createReadStream('/root/camail/mailingplatformbackend/uploads/pixel.png');
     // const stream = fs.createReadStream('/Users/mac/Desktop/5./eval/portal-eval-backend/uploads/' + name);
     await this.mailingService.trackEmailByUid(uuid);
     res.type('image/ief').send(stream);
