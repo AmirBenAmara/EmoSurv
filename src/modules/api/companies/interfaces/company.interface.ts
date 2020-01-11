@@ -1,5 +1,4 @@
 import { Document } from 'mongoose';
-import { Pool } from '../../pools/interfaces/pool.interface';
 
 export interface Company extends Document {
   readonly name: string;

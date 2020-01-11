@@ -83,7 +83,7 @@ export class CompaniesService {
   }
 });
     // tslint:disable-next-line:no-console
-    console.log(link, 'link');
+    //console.log(link, 'link');
     return random;
 
   }

@@ -23,26 +23,7 @@ export class UsersService {
     return await this.userModel.findById({ _id: id });
   }
 
-  async findUser(user: User): Promise<any> {
-    const res = await this.userModel.findOne({ userName: user.userName }).exec();
-    if (!res) {
-      return {message: 'User not found'};
-    }
-    const res2 = await res.comparePassword(user.password, res.password);
-    // const res = await user.comparePassword(user.password);
-    if (!res2) {
-      return {message: 'Wrong Password'};
-    }
-    return this.createToken(res);
-  }
-  async checkUsername(userName) {
-    const res = await this.userModel.findOne({userName}).exec();
-    if (res) {
-      return {message: true};
-    }
-    return {message: false};
-  }
-
+  
   async createToken(user: User) {
     const expiresIn = 3600;
 
@@ -52,26 +33,7 @@ export class UsersService {
 
     };
   }
-  async updatePassword(obj) {
-    const res = await this.userModel.findOne({ email: obj.email }).exec();
-    if (!res) {
-      return { message: 'User not found' };
-    }
-    /*const ValidatePassword = await res.comparePassword(obj.oldPassword, res.password);
-    if (!ValidatePassword) {
-      return { message: 'Wrong Password' };
-    }*/
-    const test = await res.comparePassword(obj.oldPassword, res.password);
-    if (test)
-    {
-      res.password = await bcrypt.hashSync(obj.newPassword, 10);
-
-      const res2 = await this.userModel.findByIdAndUpdate({ _id: res._id }, { $set: res });
-      return this.createToken(res);
-    } else {
-     return { message: 'your password is wrong'};
-    }
-  }
+ 
   async validateUser(payload: any): Promise<any> {
     // console.log(payload);
     // return true;
