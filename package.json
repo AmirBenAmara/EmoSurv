@@ -33,7 +33,7 @@
     "dotenv": "^6.0.0",
     "fastify-formbody": "2.0.0",
     "fs": "0.0.1-security",
-    "mongoose": "5.0.1",
+    "mongoose": "5.7.5",
     "mongoose-bcrypt": "1.5.1",
     "mongoose-sequence": "^5.2.2",
     "nodemailer": "^4.6.7",
